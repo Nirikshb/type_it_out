@@ -4,16 +4,31 @@ import TopBar from '../components/TypingWebsite/TopBar';
 const LoginForm = () => {
 	return (
 		<View style={styles.container}>
+			<TopBar />
 			<Text style={styles.header}>LoginForm</Text>
 
 			<Text style={styles.label}>Name</Text>
-			<TextInput type="email" placeholder="Enter Name" style={styles.input}></TextInput>
+            
+			<TextInput 
+                type="email" 
+                placeholder="Enter Name" 
+                style={styles.input} />
 
 			<Text style={styles.label}>Email</Text>
-			<TextInput type="email" placeholder="Enter Email" style={styles.input}></TextInput>
+			
+            <TextInput 
+                type="email" 
+                placeholder="Enter Email" 
+                style={styles.input}
+            />
 
 			<Text style={styles.label}>Password</Text>
-			<TextInput type="email" placeholder="Enter Password" style={styles.input}></TextInput>
+			
+            <TextInput 
+                type="email" 
+                placeholder="Enter Password" 
+                style={styles.input}
+            />
 		</View>
 	);
 };
@@ -39,8 +54,8 @@ const styles = StyleSheet.create({
 		height: 45,
 		width: 250,
 		color: 'white',
-		borderBlockColor: 'white',
 		borderWidth: 1,
+		borderColor: '#eaeeea',
 		justifyContent: 'center',
 		marginBottom: 20
 	}

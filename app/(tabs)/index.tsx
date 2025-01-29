@@ -5,7 +5,7 @@ export default function HomeScreen() {
 	return (
 		<SafeAreaView>
       <Text>ABC</Text>
-      <TopBar></TopBar>
+    
 			<LoginForm />
 		</SafeAreaView>
 	);
