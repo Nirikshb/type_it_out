@@ -51,13 +51,13 @@ const TopBar = () => {
 			<Text style={styles.topBarText}>Typing Website</Text>
 			<AntDesign name="user" size={25} color="#007AFF" onPress={() => openMe} />
 			{/* <Button title="Go to Main Page" onPress={() => router.push('/')} /> */}
-			<View style={styles.overlay}>
+			{/* <View style={styles.overlay}>
 				<FlatList
 					data={EngRing}
 					renderItem={({ item }) => <Item title={item.title} />}
 					keyExtractor={(item) => item.id}
 				/>
-			</View>
+			</View> */}
 		</View>
 	);
 };
