@@ -1,54 +1,152 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
 
 const UpperMenu = () => {
-	const [countTouch, setCountTouch] = useState('');
+	const [selectedTime, setSelectedTime] = useState(null);
+	const [countdown, setCountdown] = useState(0);
+	const [isActive, setIsActive] = useState(false);
+	const times = ['15s', '30s', '45s'];
 
-	const onPress = (value) => {
-		// Alert.alert('You tapped the button!',value);
-		setCountTouch(value);
+	useEffect(() => {
+		let interval;
+		if (isActive && countdown > 0) {
+			interval = setInterval(() => {
+				setCountdown((prev) => prev - 1);
+			}, 1000);
+		} else if (countdown === 0 && isActive) {
+			setIsActive(false);
+			Alert.alert("Time's up!");
+		}
+		return () => clearInterval(interval);
+	}, [isActive, countdown]);
+
+	const handleSelect = (time) => {
+		const seconds = parseInt(time, 10);
+		setSelectedTime(time);
+		setCountdown(seconds);
+		setIsActive(false);
+	};
+
+	const toggleTimer = () => {
+		setIsActive(!isActive);
+	};
+
+	const resetTimer = () => {
+		setCountdown(selectedTime ? parseInt(selectedTime, 10) : 0);
+		setIsActive(false);
+	};
+
+	const formatTime = (seconds) => {
+		const mins = Math.floor(seconds / 60);
+		const secs = seconds % 60;
+		return `${mins}:${secs.toString().padStart(2, '0')}`;
 	};
 
 	return (
-		<View>
-			<Text style={styles.title}>Choose Your Countdown</Text>
-			<Text style={styles.chosenCount}>You Have Chose {countTouch}</Text>
-			<View style={styles.countContainer}>
-				<Button title="15s" style={styles.countdown} onPress={() => onPress('15s')}></Button>
-				<Button title="30s" style={styles.countdown} onPress={() => onPress('30s')}></Button>
-				<Button title="45s" style={styles.countdown} onPress={() => onPress('45s')}></Button>
-				{/* <Button title='15s' style={styles.countdown}></Button> */}
+		<View style={styles.container}>
+			<Text style={styles.title}>Countdown Timer</Text>
+
+			<Text style={styles.timerText}>{formatTime(countdown)}</Text>
+
+			<View style={styles.buttonRow}>
+				{times.map((time) => (
+					<TouchableOpacity
+						key={time}
+						style={[styles.timeButton, selectedTime === time && styles.selectedButton]}
+						onPress={() => handleSelect(time)}
+					>
+						<Text style={styles.buttonText}>{time}</Text>
+					</TouchableOpacity>
+				))}
+			</View>
+
+			<View style={styles.controlRow}>
+				<TouchableOpacity
+					style={[styles.controlButton, isActive ? styles.pauseButton : styles.startButton]}
+					onPress={toggleTimer}
+					disabled={!selectedTime || countdown === 0}
+				>
+					<Text style={styles.controlText}>{isActive ? 'Pause' : 'Start'}</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity style={[styles.controlButton, styles.resetButton]} onPress={resetTimer}>
+					<Text style={styles.controlText}>Reset</Text>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		padding: 20,
+		backgroundColor: '#1a1a1a',
+		borderRadius: 15,
+		margin: 20
+	},
 	title: {
 		color: 'white',
-		textAlign: 'center'
-	},
-	chosenCount: {
-		color: 'white',
-		marginTop: 12,
-		textAlign: 'center'
-	},
-	countdown: {
-		color: 'white',
-		marginTop: 20,
-		borderColor: '#eaeaea',
-		borderWidth: 1,
-		padding: 12,
-		width: 70,
+		fontSize: 24,
+		fontWeight: 'bold',
 		textAlign: 'center',
-		borderRadius: 4
+		marginBottom: 20
 	},
-	countContainer: {
-		// flex : 1,
+	timerText: {
+		color: '#2196F3',
+		fontSize: 48,
+		textAlign: 'center',
+		marginVertical: 20,
+		fontWeight: 'bold'
+	},
+	buttonRow: {
 		flexDirection: 'row',
-		color: 'white',
-		justifyContent: 'space-around',
+		justifyContent: 'space-between',
+		marginBottom: 20
+	},
+	timeButton: {
+		backgroundColor: '#333',
+		padding: 15,
+		borderRadius: 10,
+		width: '30%',
 		alignItems: 'center'
+	},
+	selectedButton: {
+		backgroundColor: '#2196F3',
+		transform: [{ scale: 1.05 }]
+	},
+	disabledButton: {
+		opacity: 0.6
+	},
+	buttonText: {
+		color: 'white',
+		fontWeight: '500',
+		fontSize: 16
+	},
+	controlRow: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginTop: 15
+	},
+	controlButton: {
+		paddingVertical: 12,
+		paddingHorizontal: 25,
+		borderRadius: 8,
+		minWidth: 100,
+		alignItems: 'center'
+	},
+	startButton: {
+		backgroundColor: '#4CAF50'
+	},
+	pauseButton: {
+		backgroundColor: '#FFC107'
+	},
+	resetButton: {
+		backgroundColor: '#F44336'
+	},
+	controlText: {
+		color: 'white',
+		fontWeight: 'bold',
+		fontSize: 16
 	}
 });
 
