@@ -5,8 +5,18 @@ const UpperMenu = () => {
 	const [selectedTime, setSelectedTime] = useState(null);
 	const [countdown, setCountdown] = useState(0);
 	const [isActive, setIsActive] = useState(false);
+	const [customTimeInput, setCustomTimeInput] = useState('');
 	const times = ['15s', '30s', '45s'];
 
+	const handleCustomTime = () => {
+		const seconds = parseInt(customTimeInput, 10);
+		if (!isNaN(seconds) && seconds > 0) {
+		  handleSelect(`${seconds}s`);
+		  setCustomTimeInput('');
+		} else {
+		  Alert.alert('Invalid Time', 'Please enter a valid number of seconds');
+		}
+	  };
 	useEffect(() => {
 		let interval;
 		if (isActive && countdown > 0) {
@@ -73,6 +83,24 @@ const UpperMenu = () => {
 					<Text style={styles.controlText}>Reset</Text>
 				</TouchableOpacity>
 			</View>
+
+
+			<View style={styles.customTimeContainer}>
+        <TextInput
+          style={styles.customInput}
+          placeholder="Enter seconds"
+          placeholderTextColor="#666"
+          keyboardType="numeric"
+          value={customTimeInput}
+          onChangeText={setCustomTimeInput}
+        />
+        <TouchableOpacity
+          style={[styles.timeButton, styles.customTimeButton]}
+          onPress={handleCustomTime}
+        >
+          <Text style={styles.buttonText}>Set Custom</Text>
+        </TouchableOpacity>
+      </View>
 		</View>
 	);
 };
@@ -147,7 +175,23 @@ const styles = StyleSheet.create({
 		color: 'white',
 		fontWeight: 'bold',
 		fontSize: 16
-	}
+	},
+	customTimeContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginBottom: 20,
+	  },
+	  customInput: {
+		backgroundColor: '#333',
+		color: 'white',
+		padding: 15,
+		borderRadius: 10,
+		flex: 1,
+		marginRight: 10,
+	  },
+	  customTimeButton: {
+		width: '40%',
+	  },
 });
 
 export default UpperMenu;
